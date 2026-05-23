@@ -16,7 +16,7 @@
 
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', sans-serif; }
         
-        /* GIAO DIỆN MẶC ĐỊNH (CÓ Ô NHẬP MÃ) */
+        /* GIAO DIỆN MẶC ĐỊNH */
         body { background-color: var(--bg-color); color: var(--text-color); display: flex; flex-direction: column; align-items: center; padding: 20px; min-height: 100vh; overflow-x: hidden; }
         .container { width: 100%; max-width: 950px; background: var(--card-bg); padding: 25px; border-radius: 12px; box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1); text-align: center; margin-bottom: 20px; transition: all 0.3s; }
         h1 { font-size: 24px; margin-bottom: 8px; color: #1e3a8a; }
@@ -48,7 +48,6 @@
             overflow: hidden !important;
         }
         body.presentation-mode .container {
-            /* Thay vì display: none, ta dùng opacity và pointer-events để ô input vẫn tồn tại ngầm nhận focus */
             opacity: 0 !important;
             position: absolute !important;
             top: -9999px !important;
@@ -99,16 +98,15 @@
             "1391414": "id.g3e9ded37a00_0_5"
         };
 
-        // Hàm ép con trỏ luôn luôn nhảy vào ô nhập liệu bất kể chuyện gì xảy ra
+        // Ép con trỏ luôn luôn nhảy vào ô nhập liệu ngầm
         function keepFocus() {
             const inputField = document.getElementById("mssvInput");
             if (document.activeElement !== inputField) {
                 inputField.focus();
-                inputField.select(); // Tự động bôi đen để quét đè mã mới liên tục
             }
         }
 
-        // Cài đặt vòng lặp kiểm tra liên tục mỗi 0.2 giây để đảm bảo con trỏ không bao giờ bị văng ra ngoài
+        // Vòng lặp giữ tiêu điểm mỗi 0.2 giây
         setInterval(keepFocus, 200);
 
         function processMssv(mssv) {
@@ -120,13 +118,12 @@
             const btnFullscreen = document.getElementById("btnFullscreen");
             const inputField = document.getElementById("mssvInput");
 
-            inputField.value = mssv;
-
             if (mssvMapping.hasOwnProperty(mssv)) {
                 errorDiv.style.display = "none";
                 const slidePageId = mssvMapping[mssv];
                 const finalEmbedUrl = `${PUBLISHED_SLIDE_URL}?start=false&loop=false&delayms=60000&rm=minimal&slide=${slidePageId}`;
 
+                // Cập nhật slide mới
                 slideIframe.src = finalEmbedUrl;
                 slideContainer.style.display = "block";
                 btnFullscreen.style.display = "inline-block"; 
@@ -141,25 +138,27 @@
                 }
             }
             
-            // Quét xong tự bôi đen lại ngay lập tức để chờ lượt tiếp theo
-            inputField.select();
+            // LOGIC QUAN TRỌNG: Xóa trắng hoàn toàn ô nhập liệu ngay sau khi xử lý xong slide
+            inputField.value = "";
+            inputField.focus();
         }
 
         function loadSlide() {
-            const mssv = document.getElementById("mssvInput").value.trim();
-            processMssv(mssv);
+            const inputField = document.getElementById("mssvInput");
+            const mssv = inputField.value.trim();
+            if (mssv !== "") {
+                processMssv(mssv);
+            }
         }
 
         function enterPresentationMode() {
             document.body.classList.add('presentation-mode');
             document.getElementById('btnExitPresentation').style.display = 'block';
             
-            // Phóng to trình duyệt
             const docElm = document.documentElement;
             if (docElm.requestFullscreen) docElm.requestFullscreen();
             else if (docElm.webkitRequestFullscreen) docElm.webkitRequestFullscreen();
             
-            // Đợi màn hình chuyển đổi xong thì khóa chặt con trỏ chuột vào ô nhập ngầm
             setTimeout(keepFocus, 300);
         }
 
@@ -173,13 +172,13 @@
             setTimeout(keepFocus, 300);
         }
 
-        // Lắng nghe phím ESC để thoát chế độ lớn
         document.addEventListener('keydown', function(event) {
             if (event.key === 'Escape' || event.keyCode === 27) {
                 exitPresentationMode();
             }
         });
 
+        // Nhận lệnh khi nhấn nút Enter (dành cho máy quét chế độ Keyboard hoặc nhập tay)
         document.getElementById("mssvInput").addEventListener("keypress", function(event) {
             if (event.key === "Enter") {
                 event.preventDefault();
@@ -187,11 +186,11 @@
             }
         });
 
-        // Click bất cứ đâu trên màn hình (kể cả lúc đang Fullscreen) cũng tự gọi lại con trỏ chuột
         document.addEventListener("click", function() {
             keepFocus();
         });
 
+        // Kết nối ngầm WebSocket với Barcode to PC Server
         function connectBarcodeToPC() {
             const ws = new WebSocket('ws://localhost:57891');
             ws.onmessage = function(event) {
