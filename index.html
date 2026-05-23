@@ -19,25 +19,43 @@
         .container { width: 100%; max-width: 950px; background: var(--card-bg); padding: 25px; border-radius: 12px; box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1); text-align: center; margin-bottom: 20px; }
         h1 { font-size: 24px; margin-bottom: 8px; color: #1e3a8a; }
         p.subtitle { font-size: 14px; color: #64748b; margin-bottom: 20px; }
-        .input-group { display: flex; justify-content: center; gap: 10px; margin-bottom: 15px; max-width: 500px; margin-left: auto; margin-right: auto; }
+        
+        .input-group { display: flex; justify-content: center; gap: 10px; margin-bottom: 15px; max-width: 600px; margin-left: auto; margin-right: auto; }
         input[type="text"] { flex: 1; padding: 12px 16px; font-size: 18px; font-weight: bold; border: 2px solid var(--border-color); border-radius: 8px; text-align: center; outline: none; }
-        input[type="text"]:focus { border-color: var(--primary-color); }
-        button { padding: 12px 24px; font-size: 16px; background-color: var(--primary-color); color: white; border: none; border-radius: 8px; cursor: pointer; font-weight: 600; }
+        
+        button { padding: 12px 24px; font-size: 16px; color: white; border: none; border-radius: 8px; cursor: pointer; font-weight: 600; transition: all 0.2s; }
+        .btn-blue { background-color: var(--primary-color); }
+        .btn-blue:hover { background-color: var(--primary-hover); }
+        .btn-green { background-color: #16a34a; }
+        .btn-green:hover { background-color: #15803d; }
+
         .error-message { color: #dc2626; font-size: 15px; margin: 10px 0; display: none; font-weight: 500; }
         .info-box { margin-top: 10px; font-size: 15px; color: #16a34a; font-weight: 600; display: none; background-color: #f0fdf4; padding: 10px; border-radius: 6px; border: 1px solid #bbf7d0; }
-        .slide-container { width: 100%; max-width: 950px; aspect-ratio: 16 / 9; background: #000; border-radius: 12px; overflow: hidden; box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.3); display: none; }
+        
+        /* Cấu hình khung chứa slide ở giao diện thường */
+        .slide-container { width: 100%; max-width: 950px; aspect-ratio: 16 / 9; background: #000; border-radius: 12px; overflow: hidden; box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.3); display: none; position: relative; }
         iframe { width: 100%; height: 100%; border: none; }
+
+        /* Cấu hình CHẾ ĐỘ TRÌNH CHIẾU TOÀN MÀN HÌNH (Bấm nút sẽ kích hoạt cái này) */
+        .slide-container:fullscreen {
+            width: 100vw !important;
+            height: 100vh !important;
+            max-width: none !important;
+            border-radius: 0 !important;
+        }
+        .slide-container:-webkit-full-screen { width: 100vw; height: 100vh; max-width: none; border-radius: 0; }
     </style>
 </head>
 <body>
 
     <div class="container">
         <h1>Hệ Thống Điều Khiển Slide Thuyết Trình</h1>
-        <p class="subtitle">Quét MSSV từ app Barcode to PC để chuyển slide tự động</p>
+        <p class="subtitle">Quét MSSV từ app Barcode to PC để tự động nhảy trang trên màn hình lớn</p>
 
         <div class="input-group">
             <input type="text" id="mssvInput" placeholder="Nhập hoặc quét MSSV..." autocomplete="off">
-            <button onclick="loadSlide()">Hiển Thị</button>
+            <button class="btn-blue" onclick="loadSlide()">Hiển Thị</button>
+            <button class="btn-green" id="btnFullscreen" onclick="openFullscreen()" style="display: none;">🖥 Bật Trình Chiếu Lớn</button>
         </div>
         
         <div id="errorMessage" class="error-message">❌ Không tìm thấy slide cho MSSV này!</div>
@@ -49,6 +67,7 @@
     </div>
 
     <script>
+        // Link gốc đã lược bỏ phần điều hướng thừa của Google để tự tối ưu full màn hình
         const PUBLISHED_SLIDE_URL = "https://docs.google.com/presentation/d/e/2PACX-1vRNfL7AfpSo7wysyC0HzIfVmjWGKqHjs2Kbkqxxn-XKlHRDXu4wntuL6btiyu8sfDxAarXGHTs8_6X3/embed";
         
         const mssvMapping = {
@@ -57,13 +76,13 @@
             "1391414": "id.g3e9ded37a00_0_5"
         };
 
-        // Hàm xử lý nhảy slide từ mã số
         function processMssv(mssv) {
             const errorDiv = document.getElementById("errorMessage");
             const slideContainer = document.getElementById("slideContainer");
             const slideIframe = document.getElementById("slideIframe");
             const slideInfo = document.getElementById("slideInfo");
             const currentMssvSpan = document.getElementById("currentMssv");
+            const btnFullscreen = document.getElementById("btnFullscreen");
             const inputField = document.getElementById("mssvInput");
 
             inputField.value = mssv;
@@ -71,17 +90,20 @@
             if (mssvMapping.hasOwnProperty(mssv)) {
                 errorDiv.style.display = "none";
                 const slidePageId = mssvMapping[mssv];
-                const finalEmbedUrl = `${PUBLISHED_SLIDE_URL}?start=false&loop=false&delayms=60000&slide=${slidePageId}`;
+                
+                // MẸO: rm=minimal giúp xóa sạch thanh công cụ điều hướng bên dưới của Google Slides khi trình chiếu
+                const finalEmbedUrl = `${PUBLISHED_SLIDE_URL}?start=false&loop=false&delayms=60000&rm=minimal&slide=${slidePageId}`;
 
                 slideIframe.src = finalEmbedUrl;
                 slideContainer.style.display = "block";
+                btnFullscreen.style.display = "inline-block"; // Hiện nút bật trình chiếu
                 currentMssvSpan.textContent = mssv;
                 slideInfo.style.display = "block";
-                slideContainer.scrollIntoView({ behavior: 'smooth' });
             } else {
                 errorDiv.style.display = "block";
                 slideContainer.style.display = "none";
                 slideInfo.style.display = "none";
+                btnFullscreen.style.display = "none";
                 slideIframe.src = "";
             }
         }
@@ -91,7 +113,18 @@
             processMssv(mssv);
         }
 
-        // Bắt sự kiện phím Enter nếu nhập tay
+        // Hàm kích hoạt phóng to ĐỘC LẬP khung Slide lên toàn màn hình lớn
+        function openFullscreen() {
+            const elem = document.getElementById("slideContainer");
+            if (elem.requestFullscreen) {
+                elem.requestFullscreen();
+            } else if (elem.webkitRequestFullscreen) { /* Safari */
+                elem.webkitRequestFullscreen();
+            } else if (elem.msRequestFullscreen) { /* IE11 */
+                elem.msRequestFullscreen();
+            }
+        }
+
         document.getElementById("mssvInput").addEventListener("keypress", function(event) {
             if (event.key === "Enter") {
                 event.preventDefault();
@@ -99,33 +132,23 @@
             }
         });
 
-        // TỰ ĐỘNG KẾT NỐI NGẦM VỚI APP BARCODE TO PC (KHÔNG LO BỊ NHẢY CỬA SỔ)
+        // Kết nối ngầm ổn định với Barcode to PC qua WebSocket
         function connectBarcodeToPC() {
-            // Lắng nghe tín hiệu quét từ phần mềm Barcode to PC Server trên máy tính của bạn
-            // Mặc định Barcode to PC Server chạy ở cổng 57891
             const ws = new WebSocket('ws://localhost:57891');
-
             ws.onmessage = function(event) {
                 try {
                     const data = JSON.parse(event.data);
-                    // Kiểm tra nếu có dữ liệu quét được gửi đến
                     if (data && data.scans && data.scans.length > 0) {
                         const scannedCode = data.scans[0].barcode.trim();
-                        // Chạy lệnh xử lý slide ngầm ngay lập tức
                         processMssv(scannedCode);
                     }
-                } catch (e) {
-                    console.log("Đang đợi dữ liệu quét hợp lệ...");
-                }
+                } catch (e) { }
             };
-
             ws.onclose = function() {
-                // Nếu mất kết nối, tự động thử kết nối lại sau 5 giây
                 setTimeout(connectBarcodeToPC, 5000);
             };
         }
 
-        // Kích hoạt kết nối ngay khi tải xong trang web
         window.onload = function() {
             connectBarcodeToPC();
         };
