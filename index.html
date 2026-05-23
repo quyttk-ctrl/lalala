@@ -8,200 +8,77 @@
         :root {
             --primary-color: #2563eb;
             --primary-hover: #1d4ed8;
-            --success-color: #16a34a;
             --bg-color: #f8fafc;
             --card-bg: #ffffff;
             --text-color: #1e293b;
             --border-color: #cbd5e1;
         }
 
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-        }
-
-        body {
-            background-color: var(--bg-color);
-            color: var(--text-color);
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            padding: 20px;
-            min-height: 100vh;
-        }
-
-        .container {
-            width: 100%;
-            max-width: 950px;
-            background: var(--card-bg);
-            padding: 25px;
-            border-radius: 12px;
-            box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1);
-            text-align: center;
-            margin-bottom: 20px;
-        }
-
-        h1 {
-            font-size: 24px;
-            margin-bottom: 8px;
-            color: #1e3a8a;
-        }
-
-        p.subtitle {
-            font-size: 14px;
-            color: #64748b;
-            margin-bottom: 20px;
-        }
-
-        .input-group {
-            display: flex;
-            justify-content: center;
-            gap: 10px;
-            margin-bottom: 15px;
-            max-width: 500px;
-            margin-left: auto;
-            margin-right: auto;
-        }
-
-        input[type="text"] {
-            flex: 1;
-            padding: 12px 16px;
-            font-size: 18px;
-            font-weight: bold;
-            letter-spacing: 1px;
-            border: 2px solid var(--border-color);
-            border-radius: 8px;
-            outline: none;
-            text-align: center;
-            transition: border-color 0.2s;
-        }
-
-        input[type="text"]:focus {
-            border-color: var(--primary-color);
-            box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.15);
-        }
-
-        button {
-            padding: 12px 24px;
-            font-size: 16px;
-            background-color: var(--primary-color);
-            color: white;
-            border: none;
-            border-radius: 8px;
-            cursor: pointer;
-            font-weight: 600;
-            transition: background-color 0.2s;
-        }
-
-        button:hover {
-            background-color: var(--primary-hover);
-        }
-
-        .error-message {
-            color: #dc2626;
-            font-size: 15px;
-            margin-top: 5px;
-            margin-bottom: 10px;
-            display: none;
-            font-weight: 500;
-        }
-
-        .info-box {
-            margin-top: 10px;
-            font-size: 15px;
-            color: #16a34a;
-            font-weight: 600;
-            display: none;
-            background-color: #f0fdf4;
-            padding: 10px;
-            border-radius: 6px;
-            border: 1px solid #bbf7d0;
-        }
-
-        .slide-container {
-            width: 100%;
-            max-width: 950px;
-            /* Tỷ lệ màn hình 16:9 tiêu chuẩn của Google Slides */
-            aspect-ratio: 16 / 9; 
-            background: #000;
-            border-radius: 12px;
-            overflow: hidden;
-            box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.3);
-            display: none;
-        }
-
-        iframe {
-            width: 100%;
-            height: 100%;
-            border: none;
-        }
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', sans-serif; }
+        body { background-color: var(--bg-color); color: var(--text-color); display: flex; flex-direction: column; align-items: center; padding: 20px; min-height: 100vh; }
+        .container { width: 100%; max-width: 950px; background: var(--card-bg); padding: 25px; border-radius: 12px; box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1); text-align: center; margin-bottom: 20px; }
+        h1 { font-size: 24px; margin-bottom: 8px; color: #1e3a8a; }
+        p.subtitle { font-size: 14px; color: #64748b; margin-bottom: 20px; }
+        .input-group { display: flex; justify-content: center; gap: 10px; margin-bottom: 15px; max-width: 500px; margin-left: auto; margin-right: auto; }
+        input[type="text"] { flex: 1; padding: 12px 16px; font-size: 18px; font-weight: bold; border: 2px solid var(--border-color); border-radius: 8px; text-align: center; outline: none; }
+        input[type="text"]:focus { border-color: var(--primary-color); }
+        button { padding: 12px 24px; font-size: 16px; background-color: var(--primary-color); color: white; border: none; border-radius: 8px; cursor: pointer; font-weight: 600; }
+        .error-message { color: #dc2626; font-size: 15px; margin: 10px 0; display: none; font-weight: 500; }
+        .info-box { margin-top: 10px; font-size: 15px; color: #16a34a; font-weight: 600; display: none; background-color: #f0fdf4; padding: 10px; border-radius: 6px; border: 1px solid #bbf7d0; }
+        .slide-container { width: 100%; max-width: 950px; aspect-ratio: 16 / 9; background: #000; border-radius: 12px; overflow: hidden; box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.3); display: none; }
+        iframe { width: 100%; height: 100%; border: none; }
     </style>
 </head>
 <body>
 
     <div class="container">
         <h1>Hệ Thống Điều Khiển Slide Thuyết Trình</h1>
-        <p class="subtitle">Vui lòng nhấp chuột vào ô dưới đây rồi tiến hành quét Mã Số Sinh Viên</p>
+        <p class="subtitle">Quét MSSV từ app Barcode to PC để chuyển slide tự động</p>
 
         <div class="input-group">
-            <input type="text" id="mssvInput" placeholder="Đang chờ quét MSSV..." autofocus autocomplete="off">
+            <input type="text" id="mssvInput" placeholder="Nhập hoặc quét MSSV..." autocomplete="off">
             <button onclick="loadSlide()">Hiển Thị</button>
         </div>
         
-        <div id="errorMessage" class="error-message">❌ Không tìm thấy slide cho MSSV này! Vui lòng quét lại.</div>
-        <div class="info-box" id="slideInfo">✔ Đang hiển thị slide của Sinh viên: <span id="currentMssv"></span></div>
+        <div id="errorMessage" class="error-message">❌ Không tìm thấy slide cho MSSV này!</div>
+        <div class="info-box" id="slideInfo">✔ Đang hiển thị slide của SV: <span id="currentMssv"></span></div>
     </div>
 
     <div class="slide-container" id="slideContainer">
-        <iframe id="slideIframe" src="" allowfullscreen="true" mozallowfullscreen="true" webkitallowfullscreen="true"></iframe>
+        <iframe id="slideIframe" src="" allowfullscreen="true"></iframe>
     </div>
 
     <script>
-        // Đường dẫn link Publish To Web tổng mà bạn cung cấp (đã loại bỏ đoạn tham số động ở đuôi)
         const PUBLISHED_SLIDE_URL = "https://docs.google.com/presentation/d/e/2PACX-1vRNfL7AfpSo7wysyC0HzIfVmjWGKqHjs2Kbkqxxn-XKlHRDXu4wntuL6btiyu8sfDxAarXGHTs8_6X3/embed";
         
-        // Danh sách ánh xạ MSSV sang ID slide tương ứng từ ảnh và văn bản của bạn
         const mssvMapping = {
             "325008": "id.p",
             "1581248": "id.g3e9ded37a00_0_0",
             "1391414": "id.g3e9ded37a00_0_5"
         };
 
-        function loadSlide() {
-            const inputField = document.getElementById("mssvInput");
-            const mssv = inputField.value.trim();
-            
+        // Hàm xử lý nhảy slide từ mã số
+        function processMssv(mssv) {
             const errorDiv = document.getElementById("errorMessage");
             const slideContainer = document.getElementById("slideContainer");
             const slideIframe = document.getElementById("slideIframe");
             const slideInfo = document.getElementById("slideInfo");
             const currentMssvSpan = document.getElementById("currentMssv");
+            const inputField = document.getElementById("mssvInput");
 
-            if (!mssv) return;
+            inputField.value = mssv;
 
-            // Kiểm tra xem MSSV vừa quét có nằm trong danh sách không
             if (mssvMapping.hasOwnProperty(mssv)) {
-                errorDiv.style.display = "none"; // Ẩn thông báo lỗi nếu có
-
+                errorDiv.style.display = "none";
                 const slidePageId = mssvMapping[mssv];
-                
-                // Cấu hình tham số: tự động chạy=false, lặp=false, delay mặc định và chuyển chính xác đến trang tương ứng qua tham số &slide=
                 const finalEmbedUrl = `${PUBLISHED_SLIDE_URL}?start=false&loop=false&delayms=60000&slide=${slidePageId}`;
 
-                // Cập nhật URL vào iframe và hiển thị màn hình slide công khai
                 slideIframe.src = finalEmbedUrl;
                 slideContainer.style.display = "block";
-                
-                // Hiển thị trạng thái thành công
                 currentMssvSpan.textContent = mssv;
                 slideInfo.style.display = "block";
-
-                // Cuộn nhẹ trang xuống phần slide để người xem dễ quan sát
                 slideContainer.scrollIntoView({ behavior: 'smooth' });
             } else {
-                // Xử lý khi quét nhầm mã hoặc mã không tồn tại
                 errorDiv.style.display = "block";
                 slideContainer.style.display = "none";
                 slideInfo.style.display = "none";
@@ -209,24 +86,49 @@
             }
         }
 
-        // Lắng nghe sự kiện từ máy quét (máy quét luôn trả về tín hiệu bấm nút "Enter" khi quét xong)
+        function loadSlide() {
+            const mssv = document.getElementById("mssvInput").value.trim();
+            processMssv(mssv);
+        }
+
+        // Bắt sự kiện phím Enter nếu nhập tay
         document.getElementById("mssvInput").addEventListener("keypress", function(event) {
             if (event.key === "Enter") {
-                event.preventDefault(); // Tránh hiện tượng tự động reload lại trang web ngoài ý muốn
+                event.preventDefault();
                 loadSlide();
-                
-                // Mẹo giữ chân con trỏ: Tự động bôi đen toàn bộ ký tự cũ vừa quét
-                // Khi bạn quét thẻ của SV tiếp theo, máy quét sẽ tự ghi đè mã mới lên mà không cần bạn phải xóa thủ công
-                this.select();
             }
         });
-        
-        // Đảm bảo click bất kỳ đâu trên nền trang cũng tự động focus lại vào ô nhập liệu cho máy quét sẵn sàng làm việc
-        document.body.addEventListener("click", function(e) {
-            if (e.target.tagName !== "INPUT" && e.target.tagName !== "BUTTON") {
-                document.getElementById("mssvInput").focus();
-            }
-        });
+
+        // TỰ ĐỘNG KẾT NỐI NGẦM VỚI APP BARCODE TO PC (KHÔNG LO BỊ NHẢY CỬA SỔ)
+        function connectBarcodeToPC() {
+            // Lắng nghe tín hiệu quét từ phần mềm Barcode to PC Server trên máy tính của bạn
+            // Mặc định Barcode to PC Server chạy ở cổng 57891
+            const ws = new WebSocket('ws://localhost:57891');
+
+            ws.onmessage = function(event) {
+                try {
+                    const data = JSON.parse(event.data);
+                    // Kiểm tra nếu có dữ liệu quét được gửi đến
+                    if (data && data.scans && data.scans.length > 0) {
+                        const scannedCode = data.scans[0].barcode.trim();
+                        // Chạy lệnh xử lý slide ngầm ngay lập tức
+                        processMssv(scannedCode);
+                    }
+                } catch (e) {
+                    console.log("Đang đợi dữ liệu quét hợp lệ...");
+                }
+            };
+
+            ws.onclose = function() {
+                // Nếu mất kết nối, tự động thử kết nối lại sau 5 giây
+                setTimeout(connectBarcodeToPC, 5000);
+            };
+        }
+
+        // Kích hoạt kết nối ngay khi tải xong trang web
+        window.onload = function() {
+            connectBarcodeToPC();
+        };
     </script>
 </body>
 </html>
